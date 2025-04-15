@@ -6,20 +6,21 @@ const API_URL = 'https://repertorio-unidos-em-cristo.onrender.com/api/musicas';
 const API_TOKEN = 'abc123';
 const BASE_URL = 'https://www.cifraclub.com.br';
 function adicionarParametros(path, novosParams = {}) {
-    const url = new URL(path, 'https://www.cifraclub.com.br');
-  
-    // Pega e manipula os parâmetros do hash (#)
-    const currentHash = url.hash.startsWith('#') ? url.hash.substring(1) : '';
-    const hashParams = new URLSearchParams(currentHash);
-  
-    // Adiciona ou sobrescreve os novos parâmetros
-    for (const [key, value] of Object.entries(novosParams)) {
-      hashParams.set(key, value);
-    }
-  
-    url.hash = hashParams.toString();
-    return url.toString();
+  const url = new URL(path, 'https://www.cifraclub.com.br');
+
+  // Extrai os parâmetros existentes do hash (ex: #instrument=guitar&key=3)
+  const currentHash = url.hash.startsWith('#') ? url.hash.substring(1) : '';
+  const hashParams = new URLSearchParams(currentHash);
+
+  // Adiciona ou atualiza os parâmetros desejados (sem apagar os existentes)
+  for (const [key, value] of Object.entries(novosParams)) {
+    hashParams.set(key, value);
   }
+
+  // Reatribui o hash com todos os parâmetros
+  url.hash = hashParams.toString();
+  return url.toString();
+}
 
 async function getRepertorioMusicas(page, url) {
     try {
